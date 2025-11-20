@@ -78,3 +78,54 @@ public class GPTree implements Comparable<GPTree>, Cloneable {
         return root.eval(data);
     }
 }
+//Changes for hw8&9 below, code above from previous hw//
+
+public void evalFitness(DataSet dataSet) {
+        double sum = 0.0;
+
+        for (int i = 0; i < dataSet.getNumRows(); i++) {
+            DataRow row = dataSet.getRow(i);
+            double[] x = row.getX(); 
+            double y = row.getY();
+
+            double predicted = eval(x);
+            double diff = predicted - y;
+            sum += diff * diff;
+        }
+
+        this.fitness = sum;
+    }
+
+    public double getFitness() {
+        return fitness;
+    }
+
+    public int compareTo(GPTree other) {
+        
+        return Double.compare(this.fitness, other.fitness);
+    }
+
+    public boolean equals(Object o) {
+        if (o == null) return false;
+        if (!(o instanceof GPTree)) return false;
+        GPTree other = (GPTree) o;
+        return this.compareTo(other) == 0;
+    }
+
+    public Object clone() {
+        try {
+            GPTree copy = (GPTree) super.clone();
+            if (this.root != null) {
+                copy.root = (Node) this.root.clone();
+            }
+            copy.crossNodes = new ArrayList<>();
+            copy.traversed = false;                                                                                                                                          
+            copy.fitness = this.fitness;
+
+            return copy;
+        } catch (CloneNotSupportedException e) {
+
+            throw new RuntimeException(e);
+        }
+    }
+}
