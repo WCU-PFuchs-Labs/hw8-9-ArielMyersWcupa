@@ -1,18 +1,22 @@
 import java.util.*;
+import tabular.DataRow
+import tabular.DataSet
 /*
 * Code Author: Ariel Myers
 */
 
-public class GPTree implements Collector {
+public class GPTree implements Comparable<GPTree>, Cloneable {
     private Node root;
     private ArrayList<Node> crossNodes;
-    private boolean traversed; 
+    private boolean traversed;
+    private double fitness;
 
     
     GPTree() {
         this.root = null;
         this.crossNodes = new ArrayList<>();
         this.traversed = false;
+        this.fitness = Double.POSITIVE_INFINITY;
     }
 
     
@@ -21,6 +25,7 @@ public class GPTree implements Collector {
         this.root.addRandomKids(nf, maxDepth, rand);
         this.crossNodes = new ArrayList<>();
         this.traversed = false;
+        this.fitness = Double.POSITIVE_INFINITY;
     }
 
     
