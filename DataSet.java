@@ -71,4 +71,22 @@ public class DataSet {
         // FIXME: return the right thing here
         return numIndepVariables;
     }
+    //For GPTree//
+    public int getNumRows() {
+        return data.size();
+    }
+
+  
+    public DataRow getRow(int i) {
+        return data.get(i);
+    }
+
+  
+    public int getNumX() {
+        return numIndepVariables;
+    }
+
+    public int getNumIndep() {
+        return numIndepVariables;
+    }
 }
