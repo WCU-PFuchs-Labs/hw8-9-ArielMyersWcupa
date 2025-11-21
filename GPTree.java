@@ -1,17 +1,18 @@
-import java.util.*;
-import tabular.DataRow;
-import tabular.DataSet;
 /*
 * Code Author: Ariel Myers
 */
 
-public class GPTree implements Comparable<GPTree>, Cloneable {
+import java.util.*;
+import tabular.DataSet;
+import tabular.DataRow;
+
+public class GPTree implements Comparable<GPTree>, Cloneable, Collector {
+
     private Node root;
     private ArrayList<Node> crossNodes;
     private boolean traversed;
     private double fitness;
 
-    
     GPTree() {
         this.root = null;
         this.crossNodes = new ArrayList<>();
@@ -19,7 +20,6 @@ public class GPTree implements Comparable<GPTree>, Cloneable {
         this.fitness = Double.POSITIVE_INFINITY;
     }
 
-    
     public GPTree(NodeFactory nf, int maxDepth, Random rand) {
         this.root = nf.getOperator(rand);
         this.root.addRandomKids(nf, maxDepth, rand);
@@ -28,34 +28,32 @@ public class GPTree implements Comparable<GPTree>, Cloneable {
         this.fitness = Double.POSITIVE_INFINITY;
     }
 
-    
+
     @Override
     public void collect(Node node) {
         if (node != null && node.getOp() instanceof Binop) {
             crossNodes.add(node);
         }
     }
-    
+
     public void traverse() {
         if (root == null) {
             crossNodes.clear();
-            traversed = true;  
+            traversed = true;
             return;
         }
-        crossNodes.clear();   
-        root.traverse(this);  
+        crossNodes.clear();
+        root.traverse(this); 
         traversed = true;
     }
 
-    
     public String getCrossNodes() {
-        if (!traversed) return ""; 
+        if (!traversed) return "";
         StringJoiner sj = new StringJoiner(";");
         for (Node n : crossNodes) sj.add(n.toString());
         return sj.toString();
     }
 
-    
     public void crossover(GPTree other, Random rand) {
         this.traverse();
         other.traverse();
@@ -77,15 +75,14 @@ public class GPTree implements Comparable<GPTree>, Cloneable {
     public double eval(double[] data) {
         return root.eval(data);
     }
-}
-//Changes for hw8&9 below, code above from previous hw//
 
-public void evalFitness(DataSet dataSet) {
+
+    public void evalFitness(DataSet dataSet) {
         double sum = 0.0;
 
         for (int i = 0; i < dataSet.getNumRows(); i++) {
             DataRow row = dataSet.getRow(i);
-            double[] x = row.getX(); 
+            double[] x = row.getX();
             double y = row.getY();
 
             double predicted = eval(x);
@@ -100,8 +97,8 @@ public void evalFitness(DataSet dataSet) {
         return fitness;
     }
 
+    
     public int compareTo(GPTree other) {
-        
         return Double.compare(this.fitness, other.fitness);
     }
 
@@ -112,19 +109,21 @@ public void evalFitness(DataSet dataSet) {
         return this.compareTo(other) == 0;
     }
 
+    @Override
     public Object clone() {
         try {
             GPTree copy = (GPTree) super.clone();
+
             if (this.root != null) {
-                copy.root = (Node) this.root.clone();
+                copy.root = (Node) this.root.clone(); 
             }
+
             copy.crossNodes = new ArrayList<>();
-            copy.traversed = false;                                                                                                                                          
+            copy.traversed = false;
             copy.fitness = this.fitness;
 
             return copy;
         } catch (CloneNotSupportedException e) {
-
             throw new RuntimeException(e);
         }
     }
