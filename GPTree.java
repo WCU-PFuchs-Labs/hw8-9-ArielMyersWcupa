@@ -1,6 +1,6 @@
 import java.util.*;
-import tabular.DataRow
-import tabular.DataSet
+import tabular.DataRow;
+import tabular.DataSet;
 /*
 * Code Author: Ariel Myers
 */
