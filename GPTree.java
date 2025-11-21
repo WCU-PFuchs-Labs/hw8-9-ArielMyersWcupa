@@ -11,6 +11,8 @@ public class GPTree implements Comparable<GPTree>, Cloneable, Collector {
     private Node root;
     private ArrayList<Node> crossNodes;
     private boolean traversed;
+
+
     private double fitness;
 
     GPTree() {
@@ -20,6 +22,7 @@ public class GPTree implements Comparable<GPTree>, Cloneable, Collector {
         this.fitness = Double.POSITIVE_INFINITY;
     }
 
+  
     public GPTree(NodeFactory nf, int maxDepth, Random rand) {
         this.root = nf.getOperator(rand);
         this.root.addRandomKids(nf, maxDepth, rand);
@@ -43,7 +46,7 @@ public class GPTree implements Comparable<GPTree>, Cloneable, Collector {
             return;
         }
         crossNodes.clear();
-        root.traverse(this); 
+        root.traverse(this);  
         traversed = true;
     }
 
@@ -63,11 +66,13 @@ public class GPTree implements Comparable<GPTree>, Cloneable, Collector {
         Node n1 = this.crossNodes.get(rand.nextInt(this.crossNodes.size()));
         Node n2 = other.crossNodes.get(rand.nextInt(other.crossNodes.size()));
 
-        if (rand.nextBoolean()) n1.swapLeft(n2);
-        else n1.swapRight(n2);
+        if (rand.nextBoolean()) {
+            n1.swapLeft(n2);
+        } else {
+            n1.swapRight(n2);
+        }
     }
 
-    
     public String toString() {
         return (root == null) ? "" : root.toString();
     }
@@ -75,16 +80,15 @@ public class GPTree implements Comparable<GPTree>, Cloneable, Collector {
     public double eval(double[] data) {
         return root.eval(data);
     }
-
-
+ 
     public void evalFitness(DataSet dataSet) {
         double sum = 0.0;
 
         for (int i = 0; i < dataSet.getNumRows(); i++) {
             DataRow row = dataSet.getRow(i);
+            
             double[] x = row.getIndependentVariables();
             double y = row.getDependentVariable();
-
 
             double predicted = eval(x);
             double diff = predicted - y;
@@ -98,11 +102,11 @@ public class GPTree implements Comparable<GPTree>, Cloneable, Collector {
         return fitness;
     }
 
-    
     public int compareTo(GPTree other) {
         return Double.compare(this.fitness, other.fitness);
     }
 
+    @Override
     public boolean equals(Object o) {
         if (o == null) return false;
         if (!(o instanceof GPTree)) return false;
