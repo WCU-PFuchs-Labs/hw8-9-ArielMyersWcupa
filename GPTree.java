@@ -72,9 +72,13 @@ public class GPTree implements Comparable<GPTree>, Cloneable, Collector {
             n1.swapRight(n2);
         }
     }
-
+    
     public String toString() {
-        return (root == null) ? "" : root.toString();
+    if (root == null) {
+        return "";
+    }
+   
+    return "(" + root.toString() + ")";
     }
 
     public double eval(double[] data) {
